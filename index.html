@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PET Reading Practice Test 7</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background-color: #f4f6f9;
+            color: #333;
+            overflow: hidden;
+        }
+
+        header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 15px 20px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            z-index: 10;
+        }
+
+        .container {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .panel {
+            padding: 25px;
+            overflow-y: auto;
+            height: 100%;
+        }
+
+        #left-panel {
+            width: 50%;
+            background-color: #ffffff;
+            line-height: 1.6;
+            font-size: 1.05rem;
+            user-select: text;
+        }
+
+        #right-panel {
+            width: 50%;
+            background-color: #f8f9fa;
+            border-left: 1px solid #dee2e6;
+        }
+
+        .resizer {
+            width: 10px;
+            background: #e2e8f0;
+            cursor: col-resize;
+            z-index: 5;
+            transition: background 0.2s;
+        }
+
+        .resizer:hover, .resizer:active {
+            background: #cbd5e1;
+        }
+
+        .section-title {
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: #1a365d;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #cbd5e1;
+            padding-bottom: 5px;
+        }
+
+        .reading-part-content {
+            margin-bottom: 40px;
+        }
+
+        .reading-part-content h3 {
+            color: #2b6cb0;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+
+        .reading-part-content p, .reading-part-content li {
+            margin-bottom: 10px;
+            text-align: justify;
+        }
+
+        .question-block {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+            border: 1px solid #e2e8f0;
+        }
+
+        .question-title {
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: #2d3748;
+        }
+
+        .options-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .option-item {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            padding: 8px 12px;
+            border-radius: 4px;
+            border: 1px solid #cbd5e1;
+            background: #fff;
+            transition: all 0.2s;
+        }
+
+        .option-item:hover {
+            background-color: #edf2f7;
+        }
+
+        .option-item input {
+            margin-right: 10px;
+            cursor: pointer;
+        }
+
+        .select-box, .text-input {
+            padding: 8px 12px;
+            font-size: 1rem;
+            border-radius: 6px;
+            border: 1px solid #cbd5e1;
+            background-color: #fff;
+            color: #2d3748;
+            outline: none;
+            width: 100%;
+            max-width: 300px;
+        }
+
+        .hl-yellow {
+            background-color: #ffeb3b;
+            cursor: pointer;
+            border-radius: 2px;
+        }
+        
+        .hl-yellow:hover {
+            background-color: #fbc02d;
+            text-decoration: line-through;
+        }
+
+        .tooltip-info {
+            background-color: #ebf8ff;
+            border-left: 4px solid #3182ce;
+            color: #2b6cb0;
+            padding: 10px;
+            margin-bottom: 15px;
+            font-size: 0.9rem;
+            border-radius: 4px;
+        }
+
+        /* Phần tổng hợp đáp án cuối mỗi phần */
+        .summary-box {
+            background: #fffdf5;
+            border: 2px dashed #ecc94b;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 30px;
+            margin-bottom: 40px;
+        }
+
+        .summary-title {
+            font-weight: bold;
+            color: #b7791f;
+            margin-bottom: 10px;
+        }
+
+        .result-string {
+            background: #edf2f7;
+            padding: 12px;
+            border-radius: 6px;
+            font-family: monospace;
+            font-size: 1rem;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+            margin-bottom: 15px;
+            border: 1px solid #cbd5e1;
+            min-height: 45px;
+            display: flex;
+            align-items: center;
+            word-break: break-all;
+        }
+
+        .action-btns {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            font-size: 0.95rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            border: none;
+            transition: background 0.2s;
+        }
+
+        .btn-update {
+            background-color: #4a5568;
+            color: white;
+        }
+
+        .btn-update:hover {
+            background-color: #2d3748;
+        }
+
+        .btn-copy {
+            background-color: #38a169;
+            color: white;
+        }
+
+        .btn-copy:hover {
+            background-color: #2f855a;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        PET (B1 Preliminary) Reading Practice Test 7
+    </header>
+
+    <div class="container">
+        <!-- BÊN TRÁI: NỘI DUNG BÀI ĐỌC -->
+        <div id="left-panel" class="panel">
+            <div class="tooltip-info">
+                💡 <b>Mẹo học tập:</b> Bôi đen văn bản để <b>Highlight</b> màu vàng. Bấm vào đoạn đã tô để <b>Xóa Highlight</b>. Kéo thanh ở giữa để giãn màn hình.
+            </div>
+            
+            <div id="reading-content">
+                <!-- Part 1 Content -->
+                <div class="reading-part-content">
+                    <div class="section-title">Part 1 - Text Prompts</div>
+                    <p><b>1.</b><br>Tom - The milk in the fridge expires tomorrow. I bought a fresh bottle and put it on the bottom shelf. Please use the older one first.<br><i>Chloe</i></p>
+                    <p><b>2.</b><br>For staff use only.<br>Patients and visitors please use the gel bottles at the reception desk.</p>
+                    <p><b>3.</b><br>Back in 20 minutes. Sorry for the inconvenience! If urgent, please call 077129102492</p>
+                    <p><b>4.</b><br>Card payments only. This machine does not accept coins or notes. Change is not available on site. For refunds, keep your receipt and call the number on the screen.</p>
+                    <p><b>5.</b><br>This item was found on Flight 442 from Berlin on 12 May. If you recognise it, please describe the contents before we release it to you.</p>
+                </div>
+
+                <!-- Part 2 Content -->
+                <div class="reading-part-content">
+                    <div class="section-title">Part 2 - Volunteer Opportunities</div>
+                    <p><i>The people below all want to find a volunteer role. On the right are descriptions of different volunteer opportunities.</i></p>
+                    <p><b>6. Henrik</b> is a retired carpenter who still has good strength. He wants to volunteer on weekday mornings, as he looks after his grandchildren every afternoon. He enjoys practical work and would like to help maintain buildings or furniture. He does not want to work with computers or answer phones. He cannot start before 8.30 am.</p>
+                    <p><b>7. Mina</b> is a university student studying biology. She needs a weekend role that does not require travel outside the city centre. She would like to work outdoors and learn something about plants or animals. She is free on Saturday mornings and all day Sunday.</p>
+                    <p><b>8. Pavel</b> moved to the city six months ago and wants to improve his spoken English. He is available on Tuesday and Thursday evenings. He prefers a role where he talks with people individually rather than in large groups. He does not want to work with children.</p>
+                    <p><b>9. Roxanne</b> works full-time from Monday to Friday, 9 am to 5 pm. She wants a volunteer role on Saturday mornings that involves physical activity. She enjoys organising things and does not mind heavy lifting. She cannot commit to more than three hours per week.</p>
+                    <p><b>10. Omar</b> is seventeen years old and needs experience working with younger children for a future teaching application. He is free on Wednesday afternoons and Saturday mornings. He wants a role where he helps children learn something practical, not just watches them play.</p>
+                    
+                    <hr style="margin: 20px 0;">
+                    
+                    <p><b>A. City Farm Assistant</b><br>Help feed the goats and clean their shelters. Weekend mornings only, 9 am - 12 pm. Located a ten-minute walk from the city centre. No experience needed. Suitable for ages 16 and over.</p>
+                    <p><b>B. Furniture Repair Workshop</b><br>Volunteers help fix wooden chairs and tables donated to families in need. Tools and training provided. Weekday shifts available between 8 am and 12 pm. Based in a large shed near the train station. Not suitable for people with back problems.</p>
+                    <p><b>C. Reading Buddy for Adults</b><br>Spend one hour per week helping an adult learner practise reading and conversation. Evenings, Tuesday or Thursday, 6-7 pm. One-to-one sessions. Library location in the city centre. Volunteers must be patient and speak clearly.</p>
+                    <p><b>D. Saturday Park Clean-Up</b><br>Collect litter, plant flowers, and maintain footpaths. Every Saturday, 9-11 am. Meet at the park entrance. Gloves and bags provided. All ages welcome. No training required.</p>
+                    <p><b>E. After-School Sports Club</b><br>Assist a qualified coach with children aged 5-8. Activities include basic ball games and running. Wednesdays 3.30-5 pm. Volunteers should enjoy being active. Previous experience with children is helpful but not essential.</p>
+                    <p><b>F. Museum Reception Volunteer</b><br>Welcome visitors, answer questions, and help with simple computer bookings. Shifts available on weekday afternoons (1-4 pm) or Saturday mornings (10 am - 1 pm). Training provided on the booking system. Must be comfortable using a screen.</p>
+                    <p><b>G. Community Garden Project</b><br>Help plant vegetables and build raised beds. Work takes place on Tuesday and Thursday afternoons, 2-5 pm. The garden is a ten-minute walk from the city centre. Tasks include digging, carrying soil, and repairing wooden frames.</p>
+                    <p><b>H. Homework Help Club</b><br>Support children aged 8-11 with their maths and reading homework. Wednesdays 4-5.30 pm. Volunteers work with small groups of three or four children. Based in a school near the central library. No teaching qualification required.</p>
+                </div>
+
+                <!-- Part 3 Content -->
+                <div class="reading-part-content">
+                    <div class="section-title">Part 3 - The Free Sandwich</div>
+                    <p>I only went for the sandwich. The leaflet said free carpet cleaning demonstration, Saturday afternoon, and everyone who attends gets a free lunch. I had no carpet. I lived in a rented room with wooden floors. But I had nothing else to do, and a free sandwich is a free sandwich.</p>
+                    <p>The demonstration took place in a hotel conference room. There were seven of us there, mostly older couples from the area I lived in. A man named Derek stood at the front next to a dirty piece of carpet on a metal frame. He sprayed something onto it, wiped it, and the stain disappeared. We clapped politely. Then he did it again on a different stain. And again.</p>
+                    <p>After twenty minutes, I wanted to leave. But the sandwich had not arrived yet. So I stayed. Derek started telling stories. Not about cleaning. About his brother who ran a fish shop and once sold a single prawn to a famous actor. About the time he locked his keys in his van outside a funeral. About his wife who still cuts his hair even though she has no training. The other people laughed. I laughed too.</p>
+                    <p>Two hours passed. Nobody checked their phone. Nobody asked about the price of the cleaning machine. Derek kept talking, and we kept listening. At the end, he handed out sandwiches wrapped in plastic. Cheese and pickle. Not great, but fine. Then he said something I did not expect. Thank you for staying, he said. Most people leave after the first stain. You did not. That means a lot.</p>
+                    <p>I walked home thinking about Derek. He was not a good salesman. A good salesman would have talked about the machine. Derek talked about prawns and funerals and haircuts. But I think he knew exactly what he was doing. He was not selling a carpet cleaner. He was selling an hour and a half of his time, and he gave it away for free.</p>
+                    <p>I still have the leaflet somewhere. I never bought the machine. But sometimes I wonder if Derek is still there, on a Saturday afternoon, telling stories to seven strangers. And I hope someone is staying to listen.</p>
+                </div>
+
+                <!-- Part 4 Content -->
+                <div class="reading-part-content">
+                    <div class="section-title">Part 4 - Number in the Booth</div>
+                    <p>There is a public phone booth at the end of my street. Nobody uses it anymore, but the phone company hasn't removed it yet. One rainy afternoon, I stepped inside because of the pouring rain. On the metal shelf below the phone, someone had written a number in black pen. Not a full number - just six digits. <b>[16]</b></p>
+                    <p>I almost did not call. But I was bored, and the rain was getting heavier. The phone still worked. It rang four times. Then a woman answered. Her voice sounded old, tired, friendly. I told her I had found her number in the phone booth. There was a long pause - and then the woman laughed. <b>[17]</b></p>
+                    <p>Marta - that was her name - said she had written it there twenty years ago, when she was seventeen. Back then, she had been waiting for a boy who never called. She had almost forgotten about the number until my call. I asked what happened to the boy. <b>[18]</b> The memory clearly still hurt.</p>
+                    <p>We spoke for forty minutes. Marta told me about the music she listened to as a teenager, her favourite movies, the job she took after school. I told her the few stories of my own life that were worth sharing. <b>[19]</b> later.</p>
+                    <p>Marta admitted it felt unusual, talking to a stranger in a phone booth decades when I got home, I did the maths. Twenty years ago, Marta was seventeen. That meant she would be thirty-seven now. But her voice on the phone had sounded much older. <b>[20]</b> I never called the number again. But sometimes I walk past the phone booth and wonder if Marta is still waiting, somewhere, for a call that already came.</p>
+                    <p style="margin-top: 15px; font-style: italic;"><b>Options (A-H):</b><br>
+                    A. She said she had never received a call there.<br>
+                    B. I looked at the phone and decided to try it.<br>
+                    C. I felt as if we had known each other for years.<br>
+                    D. The boy had moved away without saying goodbye.<br>
+                    E. Then I realised - she had written the number twenty years ago, but she had not been seventeen then.<br>
+                    F. She did not answer my question.<br>
+                    G. The booth smelled of old rain and dust.<br>
+                    H. She told me she had never told anyone that story before.</p>
+                </div>
+
+                <!-- Part 5 Content -->
+                <div class="reading-part-content">
+                    <div class="section-title">Part 5 - Walking to Work</div>
+                    <p>I had a simple system of getting to work - and it was to <b>(21)</b> the bus. The journey was twenty minutes long, and I spent most of it mindlessly flicking through pictures on my phone or staring out of a dirty window. Then one morning the bus did not arrive. I was already late, so I there was no choice but to walk. It took forty minutes, and I arrived tired and slightly sweaty. But something felt different.</p>
+                    <p>The next day, I chose to walk again. During the first week, my legs ached every evening and I was about to give up. But by the second week, the aches had disappeared. I started to <b>(22)</b> the benefit. I arrived at work more awake. I left in the evening less stressed.</p>
+                    <p>After a month, I noticed other changes. I had the route more or less memorised. I knew <b>(23)</b> gardens had flowers and even whether they had been watered. I said good morning to the same old man on the bench every day. <b>(24)</b> before long, he started waving first.</p>
+                    <p>Walking did not change my life overnight. But it did change my mornings. I stopped <b>(25)</b> at my phone during the walk. Instead, I listened to birds or just let my mind wander. By the end of the year, I could not imagine going back to the bus. I had <b>(26)</b> into a habit that cost nothing and gave me everything.</p>
+                </div>
+
+                <!-- Part 6 Content -->
+                <div class="reading-part-content">
+                    <div class="section-title">Part 6 - The Tuesday Bowler</div>
+                    <p>I work behind the counter at a bowling alley on the edge of town. Most of our customers come in groups - birthday parties, work outings, families on rainy afternoons. But there is one man who always comes alone. He arrives <b>(27)</b> Tuesday evenings at exactly 7 pm, pays for one game, and rents the same pair of shoes every time.</p>
+                    <p>He never speaks <b>(28)</b> than necessary. Just a quiet "thank you" when I hand him the shoes. He bowls his game, puts the shoes back, and leaves. I have seen him do this more than fifty times. I do not even know his name.</p>
+                    <p>One night, <b>(29)</b> he was putting his shoes back, he stopped. He looked at me and asked if I could help him improve his score. He said he had been bowling for years but never got better. I was surprised. He had always seemed like someone who kept to <b>(30)</b></p>
+                    <p>I told him I was not a coach, but I had watched a lot of bowling. I pointed out <b>(31)</b> he was releasing the ball too early. He tried again, and his next shot knocked down eight pins - three more than his usual. He smiled. It was the first time I had seen him do that.</p>
+                    <p>Now he comes on Tuesdays and asks for tips. He still plays alone. But sometimes, <b>(32)</b> the game, he looks over and gives me a small wave. That is his way of saying thank you. And that is enough for me.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- THANH KÉO CO GIÃN -->
+        <div class="resizer" id="dragMe"></div>
+
+        <!-- BÊN PHẢI: CÂU HỎI VÀ CÁC MỤC COPY ĐÁP ÁN -->
+        <div id="right-panel" class="panel">
+            <form id="quiz-form">
+                
+                <!-- PART 1 QUESTIONS -->
+                <div class="section-title">Part 1 (Questions 1-5)</div>
+                
+                <div class="question-block" data-part="1">
+                    <div class="question-title">1. What does Chloe want Tom to do?</div>
+                    <div class="options-list">
+                        <label class="option-item"><input type="radio" name="q1" value="A"> A. Throw away the milk that expires tomorrow.</label>
+                        <label class="option-item"><input type="radio" name="q1" value="B"> B. Drink the fresh milk before it goes bad.</label>
+                        <label class="option-item"><input type="radio" name="q1" value="C"> C. Finish the older milk before opening the new one.</label>
+                    </div>
+                </div>
+
+                <div class="question-block" data-part="1">
+                    <div class="question-title">2. Who is allowed to use this dispenser?</div>
+                    <div class="options-list">
+                        <label class="option-item"><input type="radio" name="q2" value="A"> A. Hospital visitors.</label>
+                        <label class="option-item"><input type="radio" name="q2" value="B"> B. People who work at the hospital.</label>
+                        <label class="option-item"><input type="radio" name="q2" value="C"> C. Patients waiting to see a doctor.</label>
+                    </div>
+                </div>
+
+                <div class="question-block" data-part="1">
+                    <div class="question-title">3. What should a customer do if they cannot wait?</div>
+                    <div class="options-list">
+                        <label class="option-item"><input type="radio" name="q3" value="A"> A. Come back in 20 minutes.</label>
+                        <label class="option-item"><input type="radio" name="q3" value="B"> B. Phone the number provided.</label>
+                        <label class="option-item"><input type="radio" name="q3" value="C"> C. Wait at the door until someone returns.</label>
+                    </div>
+                </div>
+
+                <div class="question-block" data-part="1">
+                    <div class="question-title">4. How can someone buy something from this machine?</div>
+                    <div class="options-list">
+                        <label class="option-item"><input type="radio" name="q4" value="A"> A. By using a credit or debit card.</label>
+                        <label class="option-item"><input type="radio" name="q4" value="B"> B. By inserting coins into the slot.</label>
+                        <label class="option-item"><input type="radio" name="q4" value="C"> C. By calling the number on the screen.</label>
+                    </div>
+                </div>
+
+                <div class="question-block" data-part="1">
+                    <div class="question-title">5. What must someone do to collect this suitcase?</div>
+                    <div class="options-list">
+                        <label class="option-item"><input type="radio" name="q5" value="A"> A. Show their ticket from Flight 442.</label>
+                        <label class="option-item"><input type="radio" name="q5" value="B"> B. Say what is inside the suitcase.</label>
+                        <label class="option-item"><input type="radio" name="q5" value="C"> C. Wait until 12 May to claim it.</label>
+                    </div>
+                </div>
+
+                <!-- Summary Part 1 -->
+                <div class="summary-box">
+                    <div class="summary-title">📝 Tổng hợp đáp án Part 1:</div>
+                    <div class="result-string" id="result-part1">Chưa chọn đáp án...</div>
+                    <div class="action-btns">
+                        <button type="button" class="btn btn-update" onclick="generateSummary(1, 5, 'result-part1')">Cập nhật</button>
+                        <button type="button" class="btn btn-copy" onclick="copyResults('result-part1')">Copy Part 1</button>
+                    </div>
+                </div>
+
+
+                <!-- PART 2 QUESTIONS -->
+                <div class="section-title" style="margin-top: 30px;">Part 2 (Questions 6-10)</div>
+                
+                <div class="question-block" data-part="2">
+                    <div class="question-title">6. Henrik</div>
+                    <select name="q6" class="select-box">
+                        <option value="">-- Chọn cơ hội (A-H) --</option>
+                        <option value="A">A. City Farm Assistant</option>
+                        <option value="B">B. Furniture Repair Workshop</option>
+                        <option value="C">C. Reading Buddy for Adults</option>
+                        <option value="D">D. Saturday Park Clean-Up</option>
+                        <option value="E">E. After-School Sports Club</option>
+                        <option value="F">F. Museum Reception Volunteer</option>
+                        <option value="G">G. Community Garden Project</option>
+                        <option value="H">H. Homework Help Club</option>
+                    </select>
+                </div>
+
+                <div class="question-block" data-part="2">
+                    <div class="question-title">7. Mina</div>
+                    <select name="q7" class="select-box">
+                        <option value="">-- Chọn cơ hội (A-H) --</option>
+                        <option value="A">A. City Farm Assistant</option>
+                        <option value="B">B. Furniture Repair Workshop</option>
+                        <option value="C">C. Reading Buddy for Adults</option>
+                        <option value="D">D. Saturday Park Clean-Up</option>
+                        <option value="E">E. After-School Sports Club</option>
+                        <option value="F">F. Museum Reception Volunteer</option>
+                        <option value="G">G. Community Garden Project</option>
+                        <option value="H">H. Homework Help Club</option>
+                    </select>
+                </div>
+
+                <div class="question-block" data-part="2">
+                    <div class="question-title">8. Pavel</div>
+                    <select name="q8" class="select-box">
+                        <option value="">-- Chọn cơ hội (A-H) --</option>
+                        <option value="A">A. City Farm Assistant</option>
+                        <option value="B">B. Furniture Repair Workshop</option>
+                        <option value="C">C. Reading Buddy for Adults</option>
+                        <option value="D">D. Saturday Park Clean-Up</option>
+                        <option value="E">E. After-School Sports Club</option>
+                        <option value="F">F. Museum Reception Volunteer</option>
+                        <option value="G">G. Community Garden Project</option>
+                        <option value="H">H. Homework Help Club</option>
+                    </select>
+                </div>
+
+                <div class="question-block" data-part="2">
+                    <div class="question-title">9. Roxanne</div>
+                    <select name="q9" class="select-box">
+                        <option value="">-- Chọn cơ hội (A-H) --</option>
+                        <option value="A">A. City Farm Assistant</option>
+                        <option value="B">B. Furniture Repair Workshop</option>
+                        <option value="C">C. Reading Buddy for Adults</option>
+                        <option value="D">D. Saturday Park Clean-Up</option>
+                        <option value="E">E. After-School Sports Club</option>
+                        <option value="F">F. Museum Reception Volunteer</option>
+                        <option value="G">G. Community Garden Project</option>
+                        <option value="H">H. Homework Help Club</option>
+                    </select>
+                </div>
+
+                <div class="question-block" data-part="2">
+                    <div class="question-title">10. Omar</div>
+                    <select name="q10" class="select-box">
+                        <option value="">-- Chọn cơ hội (A-H) --</option>
+                        <option value="A">A. City Farm Assistant</option>
+                        <option value="B">B. Furniture Repair Workshop</option>
+                        <option value="C">C. Reading Buddy for Adults</option>
+                        <option value="D">D. Saturday Park Clean-Up</option>
+                        <option value="E">E. After-School Sports Club</option>
+                        <option value="F">F. Museum Reception Volunteer</option>
+                        <option value="G">G. Community Garden Project</option>
+                        <option value="H">H. Homework Help Club</option>
+                    </select>
+                </div>
+
+                <!-- Summary Part 2 -->
+                <div class="summary-box">
+                    <div class="summary-title">📝 Tổng hợp đáp án Part 2:</div>
+                    <div class="result-string" id="result-part2">Chưa chọn đáp án...</div>
+                    <div class="action-btns">
+                        <button type="button" class="btn btn-update" onclick="generateSummary(6, 10, 'result-part2')">Cập nhật</button>
+                        <button type="button" class="btn btn-copy" onclick="copyResults('result-part2')">Copy Part 2</button>
+                    </div>
+                </div>
+
+
+                <!-- PART 3 QUESTIONS -->
+                <div class="section-title" style="margin-top: 30px;">Part 3 (Questions 11-15)</div>
+                
+                <div class="question-block" data-part="3">
+                    <div class="question-title">11. What was the writer's main reason for attending the demonstration?</div>
+                    <div class="options-list">
+                        <label class="option-item"><input type="radio" name="q11" value="A"> A. He was hoping to buy a carpet for his room.</label>
+                        <label class="option-item"><input type="radio" name="q11" value="B"> B. He was curious what the salesman would try to sell to him.</label>
+                        <label class="option-item"><input type="radio" name="q11" value="C"> C. He had nothing else to do and wanted free food.</label>
+                        <label class="option-item"><input type="radio" name="q11" value="D"> D. He expected to meet new people from his neighbourhood.</label>
+                    </div>
+                </div>
+
+                <div class="question-block" data-part="3">
+                    <div class="question-title">12. What did the writer think about leaving during the first part of the demonstration?</div>
+                    <div class="options-list">
+                        <label class="option-item"><input type="radio" name="q12" value="A"> A. He decided to stay because the cleaning method was interesting.</label>
+                        <label class="option-item"><input type="radio" name="q12" value="B"> B. He felt embarrassed to leave before the other people.</label>
+                        <label class="option-item"><input type="radio" name="q12" value="C"> C. He stayed because he had not received his free sandwich yet.</label>
+                        <label class="option-item"><input type="radio" name="q12" value="D"> D. He thought Derek would be offended if he left.</label>
+                    </div>
+                </div>
+
+                <div class="question-block" data-part="3">
+                    <div class="question-title">13. What does the writer say about Derek's stories?</div>
+                    <div class="options-list">
+                        <label class="option-item"><input type="radio" name="q13" value="A"> A. They made the audience forget about the cleaning machine completely.</label>
+                        <label class="option-item"><input type="radio" name="q13" value="B"> B. They did not make sense to most of the people in the room.</label>
+                        <label class="option-item"><input type="radio" name="q13" value="C"> C. They were clearly the same stories he told at every demonstration.</label>
+                        <label class="option-item"><input type="radio" name="q13" value="D"> D. They were more about his personal life than about the product.</label>
+                    </div>
+                </div>
+
+                <div class="question-block" data-part="3">
+                    <div class="question-title">14. What does the writer suggest Derek valued most?</div>
+                    <div class="options-list">
+                        <label class="option-item"><input type="radio" name="q14" value="A"> A. Making sure everyone understood how the product worked.</label>
+                        <label class="option-item"><input type="radio" name="q14" value="B"> B. Getting people to stay and listen to his stories.</label>
+                        <label class="option-item"><input type="radio" name="q14" value="C"> C. Selling as many cleaning machines as possible.</label>
+                        <label class="option-item"><input type="radio" name="q14" value="D"> D. Proving that his product was better than others.</label>
+                    </div>
+                </div>
+
+                <div class="question-block" data-part="3">
+                    <div class="question-title">15. By saying Derek "knew exactly what he was doing", what does the writer mean?</div>
+                    <div class="options-list">
+                        <label class="option-item"><input type="radio" name="q15" value="A"> A. He was better at telling stories than at cleaning carpets.</label>
+                        <label class="option-item"><input type="radio" name="q15" value="B"> B. He succeeded in making the audience feel valued, not pressured.</label>
+                        <label class="option-item"><input type="radio" name="q15" value="C"> C. He accidentally made people stay longer than they wanted.</label>
+                        <label class="option-item"><input type="radio" name="q15" value="D"> D. He understood that free food was the only reason anyone came.</label>
+                    </div>
+                </div>
+
+                <!-- Summary Part 3 -->
+                <div class="summary-box">
+                    <div class="summary-title">📝 Tổng hợp đáp án Part 3:</div>
+                    <div class="result-string" id="result-part3">Chưa chọn đáp án...</div>
+                    <div class="action-btns">
+                        <button type="button" class="btn btn-update" onclick="generateSummary(11, 15, 'result-part3')">Cập nhật</button>
+                        <button type="button" class="btn btn-copy" onclick="copyResults('result-part3')">Copy Part 3</button>
+                    </div>
+                </div>
+
+
+                <!-- PART 4 QUESTIONS -->
+                <div class="section-title" style="margin-top: 30px;">Part 4 (Questions 16-20)</div>
+                
+                <script>
+                    const p4Container = document.getElementById('quiz-form'); // we can render dynamically or hardcode
+                </script>
+                
+                <!-- Loop manually for clarity -->
+                <div class="question-block" data-part="4">
+                    <div class="question-title">16. Gap 16</div>
+                    <select name="q16" class="select-box">
+                        <option value="">-- Chọn câu (A-H) --</option>
+                        <option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option>
+                        <option value="E">E</option><option value="F">F</option><option value="G">G</option><option value="H">H</option>
+                    </select>
+                </div>
+                <div class="question-block" data-part="4">
+                    <div class="question-title">17. Gap 17</div>
+                    <select name="q17" class="select-box">
+                        <option value="">-- Chọn câu (A-H) --</option>
+                        <option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option>
+                        <option value="E">E</option><option value="F">F</option><option value="G">G</option><option value="H">H</option>
+                    </select>
+                </div>
+                <div class="question-block" data-part="4">
+                    <div class="question-title">18. Gap 18</div>
+                    <select name="q18" class="select-box">
+                        <option value="">-- Chọn câu (A-H) --</option>
+                        <option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option>
+                        <option value="E">E</option><option value="F">F</option><option value="G">G</option><option value="H">H</option>
+                    </select>
+                </div>
+                <div class="question-block" data-part="4">
+                    <div class="question-title">19. Gap 19</div>
+                    <select name="q19" class="select-box">
+                        <option value="">-- Chọn câu (A-H) --</option>
+                        <option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option>
+                        <option value="E">E</option><option value="F">F</option><option value="G">G</option><option value="H">H</option>
+                    </select>
+                </div>
+                <div class="question-block" data-part="4">
+                    <div class="question-title">20. Gap 20</div>
+                    <select name="q20" class="select-box">
+                        <option value="">-- Chọn câu (A-H) --</option>
+                        <option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option>
+                        <option value="E">E</option><option value="F">F</option><option value="G">G</option><option value="H">H</option>
+                    </select>
+                </div>
+
+                <!-- Summary Part 4 -->
+                <div class="summary-box">
+                    <div class="summary-title">📝 Tổng hợp đáp án Part 4:</div>
+                    <div class="result-string" id="result-part4">Chưa chọn đáp án...</div>
+                    <div class="action-btns">
+                        <button type="button" class="btn btn-update" onclick="generateSummary(16, 20, 'result-part4')">Cập nhật</button>
+                        <button type="button" class="btn btn-copy" onclick="copyResults('result-part4')">Copy Part 4</button>
+                    </div>
+                </div>
+
+
+                <!-- PART 5 QUESTIONS -->
+                <div class="section-title" style="margin-top: 30px;">Part 5 (Questions 21-26)</div>
+                
+                <div class="question-block" data-part="5">
+                    <div class="question-title">21.</div>
+                    <div class="options-list">
+                        <label class="option-item"><input type="radio" name="q21" value="A"> A. drive</label>
+                        <label class="option-item"><input type="radio" name="q21" value="B"> B. choose</label>
+                        <label class="option-item"><input type="radio" name="q21" value="C"> C. select</label>
+                        <label class="option-item"><input type="radio" name="q21" value="D"> D. take</label>
+                    </div>
+                </div>
+
+                <div class="question-block" data-part="5">
+                    <div class="question-title">22.</div>
+                    <div class="options-list">
+                        <label class="option-item"><input type="radio" name="q22" value="A"> A. feel</label>
+                        <label class="option-item"><input type="radio" name="q22" value="B"> B. take</label>
+                        <label class="option-item"><input type="radio" name="q22" value="C"> C. get</label>
+                        <label class="option-item"><input type="radio" name="q22" value="D"> D. make</label>
+                    </div>
+                </div>
+
+                <div class="question-block" data-part="5">
+                    <div class="question-title">23.</div>
+                    <div class="options-list">
+                        <label class="option-item"><input type="radio" name="q23" value="A"> A. where</label>
+                        <label class="option-item"><input type="radio" name="q23" value="B"> B. what</label>
+                        <label class="option-item"><input type="radio" name="q23" value="C"> C. when</label>
+                        <label class="option-item"><input type="radio" name="q23" value="D"> D. which</label>
+                    </div>
+                </div>
+
+                <div class="question-block" data-part="5">
+                    <div class="question-title">24.</div>
+                    <div class="options-list">
+                        <label class="option-item"><input type="radio" name="q24" value="A"> A. So</label>
+                        <label class="option-item"><input type="radio" name="q24" value="B"> B. Then</label>
+                        <label class="option-item"><input type="radio" name="q24" value="C"> C. And</label>
+                        <label class="option-item"><input type="radio" name="q24" value="D"> D. Even</label>
+                    </div>
+                </div>
+
+                <div class="question-block" data-part="5">
+                    <div class="question-title">25.</div>
+                    <div class="options-list">
+                        <label class="option-item"><input type="radio" name="q25" value="A"> A. watching</label>
+                        <label class="option-item"><input type="radio" name="q25" value="B"> B. looking</label>
+                        <label class="option-item"><input type="radio" name="q25" value="C"> C. seeing</label>
+                        <label class="option-item"><input type="radio" name="q25" value="D"> D. noticing</label>
+                    </div>
+                </div>
+
+                <div class="question-block" data-part="5">
+                    <div class="question-title">26.</div>
+                    <div class="options-list">
+                        <label class="option-item"><input type="radio" name="q26" value="A"> A. got</label>
+                        <label class="option-item"><input type="radio" name="q26" value="B"> B. took</label>
+                        <label class="option-item"><input type="radio" name="q26" value="C"> C. entered</label>
+                        <label class="option-item"><input type="radio" name="q26" value="D"> D. stuck</label>
+                    </div>
+                </div>
+
+                <!-- Summary Part 5 -->
+                <div class="summary-box">
+                    <div class="summary-title">📝 Tổng hợp đáp án Part 5:</div>
+                    <div class="result-string" id="result-part5">Chưa chọn đáp án...</div>
+                    <div class="action-btns">
+                        <button type="button" class="btn btn-update" onclick="generateSummary(21, 26, 'result-part5')">Cập nhật</button>
+                        <button type="button" class="btn btn-copy" onclick="copyResults('result-part5')">Copy Part 5</button>
+                    </div>
+                </div>
+
+
+                <!-- PART 6 QUESTIONS -->
+                <div class="section-title" style="margin-top: 30px;">Part 6 (Questions 27-32)</div>
+                
+                <div class="question-block" data-part="6">
+                    <div class="question-title">27. Gap 27</div>
+                    <input type="text" name="q27" class="text-input" placeholder="Nhập từ cho câu 27">
+                </div>
+                <div class="question-block" data-part="6">
+                    <div class="question-title">28. Gap 28</div>
+                    <input type="text" name="q28" class="text-input" placeholder="Nhập từ cho câu 28">
+                </div>
+                <div class="question-block" data-part="6">
+                    <div class="question-title">29. Gap 29</div>
+                    <input type="text" name="q29" class="text-input" placeholder="Nhập từ cho câu 29">
+                </div>
+                <div class="question-block" data-part="6">
+                    <div class="question-title">30. Gap 30</div>
+                    <input type="text" name="q30" class="text-input" placeholder="Nhập từ cho câu 30">
+                </div>
+                <div class="question-block" data-part="6">
+                    <div class="question-title">31. Gap 31</div>
+                    <input type="text" name="q31" class="text-input" placeholder="Nhập từ cho câu 31">
+                </div>
+                <div class="question-block" data-part="6">
+                    <div class="question-title">32. Gap 32</div>
+                    <input type="text" name="q32" class="text-input" placeholder="Nhập từ cho câu 32">
+                </div>
+
+                <!-- Summary Part 6 -->
+                <div class="summary-box">
+                    <div class="summary-title">📝 Tổng hợp đáp án Part 6:</div>
+                    <div class="result-string" id="result-part6">Chưa chọn đáp án...</div>
+                    <div class="action-btns">
+                        <button type="button" class="btn btn-update" onclick="generateSummary(27, 32, 'result-part6')">Cập nhật</button>
+                        <button type="button" class="btn btn-copy" onclick="copyResults('result-part6')">Copy Part 6</button>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // 1. Chia đôi màn hình co giãn
+        const resizer = document.getElementById('dragMe');
+        const leftSide = document.getElementById('left-panel');
+        const rightSide = document.getElementById('right-panel');
+
+        let x = 0; let leftWidth = 0;
+        const mouseDownHandler = function (e) {
+            x = e.clientX;
+            leftWidth = leftSide.getBoundingClientRect().width;
+            document.addEventListener('mousemove', mouseMoveHandler);
+            document.addEventListener('mouseup', mouseUpHandler);
+        };
+        const mouseMoveHandler = function (e) {
+            const dx = e.clientX - x;
+            const containerWidth = resizer.parentNode.getBoundingClientRect().width;
+            const newLeftWidth = ((leftWidth + dx) / containerWidth) * 100;
+            if (newLeftWidth > 15 && newLeftWidth < 85) {
+                leftSide.style.width = `${newLeftWidth}%`;
+                rightSide.style.width = `${100 - newLeftWidth}%`;
+            }
+        };
+        const mouseUpHandler = function () {
+            document.removeEventListener('mousemove', mouseMoveHandler);
+            document.removeEventListener('mouseup', mouseUpHandler);
+        };
+        resizer.addEventListener('mousedown', mouseDownHandler);
+
+        // 2. Chức năng Highlight văn bản bên trái
+        const readingContent = document.getElementById('reading-content');
+        readingContent.addEventListener('mouseup', function() {
+            const selection = window.getSelection();
+            if (!selection.isCollapsed && selection.rangeCount > 0) {
+                const range = selection.getRangeAt(0);
+                if (readingContent.contains(range.commonAncestorContainer)) {
+                    const span = document.createElement('span');
+                    span.className = 'hl-yellow';
+                    span.title = 'Bấm để xóa highlight';
+                    try { range.surroundContents(span); } catch (e) {}
+                }
+                selection.removeAllRanges();
+            }
+        });
+
+        readingContent.addEventListener('click', function(e) {
+            if (e.target.classList.contains('hl-yellow')) {
+                const span = e.target;
+                const textNode = document.createTextNode(span.textContent);
+                span.parentNode.replaceChild(textNode, span);
+                readingContent.normalize();
+            }
+        });
+
+        // 3. Hàm tổng hợp đáp án theo từng phần
+        function generateSummary(startNum, endNum, elementId) {
+            const form = document.getElementById('quiz-form');
+            const formData = new FormData(form);
+            let resultArr = [];
+
+            for (let i = startNum; i <= endNum; i++) {
+                let ans = formData.get('q' + i);
+                if (!ans || ans.trim() === "") {
+                    ans = '_';
+                }
+                resultArr.push(`${i}: ${ans}`);
+            }
+
+            const resultText = resultArr.join(' | ');
+            document.getElementById(elementId).innerText = resultText;
+            return resultText;
+        }
+
+        // 4. Hàm Copy kết quả vào Clipboard
+        function copyResults(elementId) {
+            const textElement = document.getElementById(elementId);
+            const textToCopy = textElement.innerText;
+
+            if (textToCopy.includes("Chưa chọn")) {
+                alert("Bạn vui lòng bấm nút 'Cập nhật' trước khi copy nhé!");
+                return;
+            }
+
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                alert("Đã copy đáp án thành công! Bạn hãy dán (Paste) để gửi cho giáo viên.");
+            }).catch(err => {
+                alert("Lỗi copy tự động, vui lòng tự bôi đen dòng chữ để copy.");
+            });
+        }
+    </script>
+</body>
+</html>
